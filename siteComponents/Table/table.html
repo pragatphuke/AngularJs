@@ -1,0 +1,93 @@
+<div data-ng-app="TableMainApp" data-ng-controller="tableController">
+    <div style="background-color: #ffffff;">
+        <div class="row" style="padding-top: 15px;padding-bottom: 15px;">
+            <div class="col-md-9">
+                <div>
+                    <span style="vertical-align: middle;">Table Operations</span>
+                </div>
+            </div>
+            <div class="col-md-3"></div>
+        </div>
+    </div>
+    <div style="margin-bottom: 20px;"></div>
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8" style="background-color: #ffffff;margin-left: 15px;padding-left: 0px;padding-right: 0px;border: 1px solid #CED7DD;">
+            <div class="row" style="padding-bottom: 10px;padding-top: 10px;">
+                <div class="col-md-12">
+                    <div style="float: right;margin-right: 10px;">
+                        <span style="vertical-align: middle;">
+                            SEARCH:
+                        </span>
+                        <div class="btn-group" role="group">
+                            <input type="text" class="form-control" placeholder="NAME / COMPANY NAME" ng-model="searchUserMgmt" style="height: 30px; background-color: #EBF1F5; border: none;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-bottom: 10px;padding-top: 10px;">
+                <div class="col-md-7">
+                    <div ng-cloak ng-show="userAddSuccess" class="alert alert-success" role="alert">
+                        <span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span>
+                        <span class="sr-only">Success: </span>Records saved successfully.
+                    </div>
+                    <div ng-cloak ng-show="deleteUserSuccess" class="alert alert-success" role="alert">
+                        <span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span>
+                        <span class="sr-only">Success: </span>Deleted record successfully.
+                    </div>
+                    <div ng-cloak ng-show="userSaveWarning" class="alert alert-warning">
+                        Warning! You have not added/edited anything.
+                    </div>
+                    <div ng-cloak ng-show="userDeleteWarning" class="alert alert-warning">
+                        Warning! You have not select any record to delete.
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <button type="button" ng-click="deleteRecords();" class="btn-primary-tableAdd form-control" style="width: 95px;float: right;border: 1px solid #007DB4;">
+                        <span style="vertical-align: middle;font-size: 13px;">Delete</span>
+                    </button>
+                    <button type="button" ng-click="saveRecords();" class="btn-primary-submitTable form-control" style="width: 70px;float: right;border: 1px solid #15b78f;margin-right: 5px;">
+                        <span style="vertical-align: middle;font-size: 13px;">Save</span>
+                    </button>
+                    <button type="button" ng-click="addRecord();" class="btn-primary-tableAdd form-control" style="width: 125px;float: right;border: 1px solid #007DB4;margin-right: 5px;">
+                        <span style="vertical-align: middle;font-size: 13px;">Add Record</span>
+                    </button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table table-striped" style="width:100%;border-bottom:1px solid #E2E7EB;">
+                        <thead>
+                            <tr class="onlineTableHeader">
+                                <th style="vertical-align: top;padding-left: 15px;padding-right: 15px;border-right: 1px solid #596478;border-left: 1px solid #596478;text-align: center;"><input type="checkbox" ng-model="checkAll" ng-change="checkAllList()" name="checkbox"></th>
+                                <th style="vertical-align: top;border-right: 1px solid #596478;text-align: center;color: #FFF;"<sup>*</sup>ID</th>
+                                <th style="vertical-align: top;border-right: 1px solid #596478;text-align: center;color: #FFF;">
+                                    <sup>*</sup>
+                                    <span>
+                                        <a href="javascript:void(0)" style="color: #FFF;" ng-click="sortType = 'name'; sortReverse = !sortReverse">
+                                            NAME
+                                            <span ng-show="sortType == 'name' && !sortReverse" class="fa fa-caret-down"></span>
+                                            <span ng-show="sortType == 'name' && sortReverse" class="fa fa-caret-up"></span>
+                                        </a>
+                                    </span>
+                                </th>
+                                <th style="vertical-align: top;border-right: 1px solid #596478;text-align: center;color: #FFF;">EMAIL</th>
+                                <th style="vertical-align: top;border-right: 1px solid #596478;text-align: center;color: #FFF;"><sup>*</sup>COMPANY NAME</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="user in userRecords | orderBy:sortType:sortReverse | filterUserMgmt:searchUserMgmt">
+                                <td style="padding-left: 15px;padding-right: 15px;border-right: 1px solid #DDD;border-left: 1px solid #DDD;"><input ng-checked="checkAll || user.deleteFlag" type="checkbox" ng-change="checkIndividual(user.deleteFlag)" name="checkbox" ng-model="user.deleteFlag"/></td>
+                                <td id="utdid{{user.uniqueIndex}}" data-toggle="tooltip" data-placement="top" title="Please enter user id" style="border-right: 1px solid #DDD;"><input type="textbox" id="tableUserId{{user.uniqueIndex}}" class="textboxInTable" ng-model="user.id" ng-keyup="setEditFlag(user)" ng-class="invoiceIdFocus{{user.uniqueIndex}} ? 'textboxInTableFocus' : 'textboxInTableBlur'" ng-focus="setFieldFocus('invoiceIdFocus',user.uniqueIndex)" ng-blur="onFieldBlur('invoiceIdFocus',user.uniqueIndex)"/></td>
+                                <td id="utdname{{user.uniqueIndex}}" data-toggle="tooltip" data-placement="top" title="Please enter user name" style="border-right: 1px solid #DDD;"><input type="textbox" class="textboxInTable" ng-model="user.name" ng-keyup="setEditFlag(user)" ng-class="invoiceNameFocus{{user.uniqueIndex}} ? 'textboxInTableFocus' : 'textboxInTableBlur'" ng-focus="setFieldFocus('invoiceNameFocus',user.uniqueIndex)" ng-blur="onFieldBlur('invoiceNameFocus',user.uniqueIndex)"/></td>
+                                <td id="utdemail{{user.uniqueIndex}}" style="border-right: 1px solid #DDD;"><input type="textbox" class="textboxInTable" ng-model="user.email" ng-keyup="setEditFlag(user)" ng-class="invoiceEmailFocus{{user.uniqueIndex}} ? 'textboxInTableFocus' : 'textboxInTableBlur'" ng-focus="setFieldFocus('invoiceEmailFocus',user.uniqueIndex)" ng-blur="onFieldBlur('invoiceEmailFocus',user.uniqueIndex)"/></td>
+                                <td id="utdcomName{{user.uniqueIndex}}" data-toggle="tooltip" data-placement="top" title="Please enter user company name" style="border-right: 1px solid #DDD;"><input type="textbox" class="textboxInTable" ng-model="user.companyProfile.coName" ng-keyup="setEditFlag(user)" ng-class="invoiceCoFocus{{user.uniqueIndex}} ? 'textboxInTableFocus' : 'textboxInTableBlur'" ng-focus="setFieldFocus('invoiceCoFocus',user.uniqueIndex)" ng-blur="onFieldBlur('invoiceCoFocus',user.uniqueIndex)"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>          
+        <div class="col-md-2"></div>
+    </div>
+</div>

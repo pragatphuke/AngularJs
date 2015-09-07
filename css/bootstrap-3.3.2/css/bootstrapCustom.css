@@ -1,0 +1,21 @@
+.navbar-default {
+  background-color: #ffffff;
+}
+
+.navbar-font {
+	font-family: Helvetica-Bold;
+	font-size: 11px;
+}
+
+.navbar-default .navbar-nav>li>a {
+    color: #333333;
+}
+
+.navbar .nav > li > a:focus,  .navbar .nav > li > a:hover{
+  color: #0098ca;
+}
+.row {
+  margin-right: 0px;
+  margin-left: 0px;
+}
+
